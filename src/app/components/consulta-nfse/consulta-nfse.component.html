@@ -1,0 +1,21 @@
+<div class="container">
+    <h2>Consulta de Créditos por NFS-e</h2>
+  
+    <form (ngSubmit)="consultar()" #form="ngForm">
+      <div>
+        <label for="numeroNfse">Número da NFS-e:</label>
+        <input
+          type="text"
+          id="numeroNfse"
+          name="numeroNfse"
+          required
+          [(ngModel)]="numeroNfse"
+        />
+      </div>
+  
+      <button type="submit" [disabled]="!form.form.valid">Consultar</button>
+    </form>
+  
+    <p *ngIf="erro" style="color:red;">{{ erro }}</p>
+  </div>
+  
