@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { CreditoService } from 'src/app/services/credito.service';
+import { Credito } from 'src/app/models/credito.model';
 
 @Component({
   selector: 'app-consulta-nfse',
@@ -8,17 +9,26 @@ import { Router } from '@angular/router';
 })
 export class ConsultaNfseComponent {
   numeroNfse: string = '';
-  erro: string = '';
+  creditos: Credito[] = [];
+  erro: string | null = null;
+  carregando = false;
 
-  constructor(private router: Router) {}
+  constructor(private creditoService: CreditoService) {}
 
   consultar() {
-    if (!this.numeroNfse || this.numeroNfse.trim().length === 0) {
-      this.erro = 'Informe um número válido de NFS-e.';
-      return;
-    }
-
-    this.erro = '';
-    this.router.navigate(['/resultados', this.numeroNfse.trim()]);
+    this.erro = null;
+    this.creditos = [];
+    this.carregando = true;
+  
+    this.creditoService.getCreditosPorNfse(this.numeroNfse).subscribe({
+      next: (data) => {
+        this.creditos = data;
+        this.carregando = false;
+      },
+      error: () => {
+        this.erro = 'Erro ao buscar créditos. Verifique o número da NFS-e ou o servidor.';
+        this.carregando = false;
+      }
+    });
   }
 }
